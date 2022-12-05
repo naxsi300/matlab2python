@@ -9,7 +9,7 @@ clear
 
 # выбор файла
 Name, PathName = uigetfile('*.*', 'Выбор файла')
-NameFile = strcat(PathName, Name)
+NameFile = PathName + Name
 # статистика пиков
 stat_Num_peak_va = 0
 stat_Num_peak_vd = 0
@@ -195,9 +195,9 @@ for x in np.arange(1, Num_block+1).reshape(-1):
 # выход:
 #   1) степень позиционности модуляции r (если возврат 0 - то позиционность модуляции не определена )
 #####################################################################
-        m_pos = GetPositionModulate(8, mu_n(x, : ), Tqr(6, : ), N_pos_qam - 3, 1, mqam)
+        m_pos = GetPositionModulate(8, mu_n(x, : ) , Tqr(6, : ), N_pos_qam - 3, 1, mqam)
         m_pos = m_pos + 2
-        modulation = strcat(int2str(2 ** (m_pos)), '-QAM')
+        modulation = 2 ** (m_pos) + '-QAM'
         p_pos_qam[m_pos, 1] = p_pos_qam(m_pos, 1) + 1
         ###########################################################################
         # PSK-M
@@ -211,7 +211,7 @@ for x in np.arange(1, Num_block+1).reshape(-1):
             for i in np.arange(1, np.asarray(buf_signal_real).size+1).reshape(-1):
                 buf_signal_real[i] = buf_signal_real(i) + 2
             # преобразования вейвлетом Хаара
-            va1, vd1 = dwt(buf_signal_real, 'haar')
+            va1, vd1 = pywt.dwt(buf_signal_real, 'haar')
             histogramm_va = hist_complex(va1, 10)
             mu_n_haar[x, :] = CalcMoment(va1, histogramm_va, 8)
             ###################################################################
@@ -227,7 +227,7 @@ for x in np.arange(1, Num_block+1).reshape(-1):
 #   1) степень позиционности модуляции r (если возврат 0 - то позиционность модуляции не определена )
 #####################################################################
             m_pos = GetPositionModulatePSK(8, mu_n_haar(x, :), Tpr_h(6, : ), N_pos_psk - 2, mpsk_h)
-            modulation = strcat(int2str(2 ** (m_pos)), '-PSK')
+            modulation = 2 ** (m_pos) + '-PSK'
             p_pos_psk[m_pos, 1] = p_pos_psk(m_pos, 1) + 1
             ###########################################################################
 ###########################################################################
@@ -240,7 +240,7 @@ for x in np.arange(1, Num_block+1).reshape(-1):
                 for i in np.arange(1, np.asarray(buf_signal_real).size+1).reshape(-1):
                     buf_signal_real[i] = buf_signal_real(i) + 2
                 # преобразования вейвлетом Хаара
-                va1, vd1 = dwt(buf_signal_real, 'haar')
+                va1, vd1 = pywt.dwt(buf_signal_real, 'haar')
                 histogramm_va = hist_complex(va1, 10)
                 mu_n_haar[x, :] = CalcMoment(va1, histogramm_va, 8)
                 p_good_fsk = p_good_fsk + 1
@@ -257,13 +257,13 @@ for x in np.arange(1, Num_block+1).reshape(-1):
 #   1) степень позиционности модуляции r (если возврат 0 - то позиционность модуляции не определена )
 #####################################################################
                 m_pos = GetPositionModulateFSK(8, mu_n_haar(x, :), Tfr_h(6, : ), N_pos_fsk, mpsk)
-                modulation = strcat(int2str(2 ** (m_pos)), '-FSK')
+                modulation = 2 ** (m_pos) + '-FSK'
                 p_pos_fsk[m_pos, 1] = p_pos_fsk(m_pos, 1) + 1
                 #  end;
             else:
                 if 4 == type_mod:
                     # тип GMSK
-                    modulation = strcat('GMSK')
+                    modulation = 'GMSK'
                     p_good_gmsk = p_good_gmsk + 1
     #####################################################################################
 
@@ -284,7 +284,7 @@ p_good_qam = p_good_qam / Num_block
 
 # закрытие файла пакетов
 fclose(file)
-file2.close()
+# file2.close()
 # 0001 конец времянка для графика  достоверности от размера выборки
 
 # запись моментов в файл с соответствующим именем
