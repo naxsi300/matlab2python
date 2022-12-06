@@ -42,7 +42,7 @@ def CalcT(Name_gmsk=None, Name_fsk=None, Name_psk=None, Name_qam=None):
 
     for r in np.arange(1, r_fsk+1).reshape(-1):
         strok = 2 ** r
-        fid2 = open(strok + '-' + Name_fsk, 'rb')
+        fid2 = open(str(strok) + "-" + Name_fsk, 'rb')
         #    for z=1:8
 #    re=fread(fid2,1,'float32');
 #    im=fread(fid2,1,'float32');
@@ -59,7 +59,7 @@ def CalcT(Name_gmsk=None, Name_fsk=None, Name_psk=None, Name_qam=None):
 
     for r in np.arange(1, r_psk+1).reshape(-1):
         strok = 2 ** r
-        fid2 = open(strok + '-' + Name_psk, 'rb')
+        fid2 = open(str(strok) + '-' + Name_psk, 'rb')
         # for z=1:8
 # re=fread(fid2,1,'float32');
 # im=fread(fid2,1,'float32');
@@ -76,7 +76,7 @@ def CalcT(Name_gmsk=None, Name_fsk=None, Name_psk=None, Name_qam=None):
 
     for r in np.arange(3, r_qam+1).reshape(-1):
         strok = 2 ** (r)
-        fid2 = open(strok + '-' + Name_qam, 'rb')
+        fid2 = open(str(strok) + '-' + Name_qam, 'rb')
         # if(r==12)
 #    r=12;
 # end;
@@ -109,10 +109,10 @@ def CalcT(Name_gmsk=None, Name_fsk=None, Name_psk=None, Name_qam=None):
             #   Tfr(n,r)=(mu_fsk(1,r)*mu_fsk(2,r+1)+mu_fsk(1,r+1)*mu_fsk(2,r))/(mu_fsk(2,r+1)+mu_fsk(2,r+1));
             # Tfr(r,n)=abs( (mu_fsk(n,r+moment_rang)*mu_fsk(n+1,r+moment_rang+1)+mu_fsk(n,r+moment_rang+1)*mu_fsk(n+1,r+moment_rang))/(mu_fsk(n,r+moment_rang+1)+mu_fsk(n,r+moment_rang+1)) );
             # Tqr(r,n)=(mu_qam(n,r+moment_rang)*mu_qam(n+1,r+moment_rang+1)+mu_qam(n,r+moment_rang+1)*mu_qam(n+1,r+moment_rang))/(mu_qam(n,r+moment_rang+1)+mu_qam(n+1,r+moment_rang+1));
-            # m11 = mu_fsk[n, r]
-            # mn22 = mu_fsk[n + 1, moment_rang]
-            # m21 = mu_fsk[n + 1, r]
-            # mn12 = mu_fsk[n, moment_rang]
+            m11 = mu_fsk[n, r]
+            mn22 = mu_fsk[n + 1, moment_rang]
+            m21 = mu_fsk[n + 1, r]
+            mn12 = mu_fsk[n, moment_rang]
             # Tfr(r,n)= (mu_fsk(n,r)*mu_fsk(n+1,moment_rang)+mu_fsk(n,moment_rang)*mu_fsk(n+1,r))/(mu_fsk(n,moment_rang)+mu_fsk(n+1,moment_rang)) ;
             Tfr[r, n] = (mu_fsk[n, r] * mu_fsk[n + 1, moment_rang] + mu_fsk[n, moment_rang]
                          * mu_fsk[n + 1, r]) / (mu_fsk[n, moment_rang] + mu_fsk[n + 1, moment_rang])
